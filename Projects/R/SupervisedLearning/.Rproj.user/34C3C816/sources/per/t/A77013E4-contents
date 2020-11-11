@@ -1,0 +1,246 @@
+---
+title: "PolynomialAndNonLinearRegression"
+params:
+  answers: false
+mainfont: Arial
+fontsize: 12pt
+urlcolor: blue
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 1
+    latex_engine: xelatex
+  html_document:
+    toc: true
+    toc_depth: 1
+    toc_float: true
+    df_print: paged
+    theme: paper
+---
+
+```{r}
+library(MASS)
+library(splines)
+library(ISLR)
+library(tidyverse)
+library(cowplot)
+set.seed(45)
+```
+
+```{r}
+Boston %>% 
+  ggplot(aes(x = lstat, y = medv)) +
+  geom_point() +
+  theme_minimal()
+```
+```{r}
+#Create a function called `pred_plot()` that takes as input an `lm` object, which outputs the above plot but with a prediction line generated from the model object using the `predict()` method
+
+pred_plot <- function(model) {
+  x_pred <- seq(min(Boston$lstat), max(Boston$lstat), length.out = 500)
+  y_pred <- predict(model, newdata = tibble(lstat = x_pred))
+  
+  Boston %>%
+    ggplot(aes(x = lstat, y = medv)) + 
+    geom_point() +
+    geom_line(data = tibble(lstat = x_pred, medv = y_pred), size = 1, col = "Blue")
+}
+
+#testing the function
+lin_mod <- lm(medv ~ lstat, data = Boston)
+pred_plot(lin_mod)
+```
+```{r}
+#polynomial regression
+
+polyreg_mod1 <- lm(medv ~ lstat + I(lstat^2) + I(lstat^3), data = Boston) #linear model with second and third degree polynomial terms
+pred_plot(polyreg_mod1)
+
+#create 5 rows (1, 2, 3, 4, 5). Degree = 3 means they will be squared and then cubed to create new columns. Thus a matrix is created
+#poly(1:5, degree = 3, raw = TRUE) 
+#     1  2   3
+#[1,] 1  1   1
+#[2,] 2  4   8
+#[3,] 3  9  27
+#[4,] 4 16  64
+#[5,] 5 25 125
+```
+
+```{r}
+
+polyreg_mod2 <- lm(medv ~ poly(lstat, degree = 3, raw = TRUE), data = Boston)
+pred_plot(polyreg_mod2)
+```
+
+```{r}
+polyreg_mod3 <- lm(medv ~ I(lstat <= median(lstat)), data = Boston)
+pred_plot(polyreg_mod3)
+coef(polyreg_mod3) #predicted medv = 16.67747+11.71067(intercept+slope) = 28.38814
+```
+
+```{r}
+polyreg_mod4 <- lm(medv ~ cut(lstat, 5), data = Boston)
+pred_plot(polyreg_mod4)
+#cut function divided the lstat into 5 equal spaces(but do not have equal amount of training data). See the table in the console for more details.
+
+table(cut(Boston$lstat, 5))
+```
+
+```{r}
+#Create a piecewise regression model `pwq_mod` where the sections are not equally spaced, but have equal amounts of training data(opposite of cut).
+brks <- c(-Inf, quantile(Boston$lstat, probs = c(.2, .4, .6, .8)), Inf)
+polyreg_mod5 <- lm(medv ~ cut(lstat, brks), data = Boston)
+pred_plot(polyreg_mod5)
+table(cut(Boston$lstat, brks))
+```
+
+```{r}
+# Piecewise polynomial regression
+piecewise_cubic_basis <- function(predictor, numberOfSpaces = 1){
+  if(numberOfSpaces == 0)
+    return(poly(predictor, degree = 3, raw + TRUE))
+  
+  cut_predictor <- cut(predictor, breaks = numberOfSpaces+1)
+  out <- matrix(nrow = length(predictor), ncol = 0)
+  
+  for(level in levels(cut_predictor)){
+    tmp <- predictor
+    tmp[cut_predictor != level] <- 0
+    out <- cbind(out, poly(tmp, degrre = 3, raw = TRUE))
+  }
+  
+  out
+}
+
+pc1_mod <- lm(medv ~ piecewise_cubic_basis(lstat, 1), data = Boston)
+pred_plot(pc1_mod)
+
+pc2_mod <- lm(medv ~ piecewise_cubic_basis(lstat, 2), data = Boston)
+pred_plot(pc2_mod)
+
+pc3_mod <- lm(medv ~ piecewise_cubic_basis(lstat, 3), data = Boston)
+pred_plot(pc3_mod)
+```
+```{r}
+#Creating splines to remove the discontinuities from the above models
+
+boston_subset <- Boston %>% as_tibble %>% select(lstat, medv)
+
+boston_subset <- boston_subset %>% mutate(lstat2 = lstat^2, lstat3 = lstat^3,
+                                          lstat_subset = ifelse(lstat > median(lstat), (lstat - median(lstat))^3, 0))
+
+subset_mod <- lm(medv ~ lstat + lstat2 + lstat3 + lstat_subset, data = boston_subset)
+summary(subset_mod)
+
+#cubic spline
+cubic_spline_mod <- lm(medv ~ bs(lstat, knots = median(lstat)), data = Boston)
+summary(cubic_spline_mod)
+
+# Comparing the predictions from the two models: negligible absolute difference
+mean(abs(predict(cubic_spline_mod) - predict(subset_mod)))
+```
+
+```{r}
+pred_plot(cubic_spline_mod)
+```
+```{r}
+#natural cubic spline
+
+natural_cubic_spline <- lm(medv ~ ns(lstat, df = 3), data = Boston)
+pred_plot(natural_cubic_spline)
+```
+```{r}
+plot_grid(
+  pred_plot(lin_mod) + ggtitle("Linear regression"),
+  pred_plot(polyreg_mod1) + ggtitle("Polynomial"),
+  pred_plot(polyreg_mod5) + ggtitle("Piecewise constant"),
+  pred_plot(pc3_mod) + ggtitle("Piecewise cubic"),
+  pred_plot(spline_mod) + ggtitle("Cubic spline"),
+  pred_plot(natural_cubic_spline) + ggtitle("Natural spline")
+)
+```
+
+```{r}
+#Use 12-fold cross validation to determine which of the 6 methods has the lowest out-of-sample MSE
+
+#1. create an mse function
+mse <- function(predictedValue, trueValue){
+  mean((predictedValue - trueValue)^2)
+}
+
+#2. creating the 12 fold dataset
+boston_12fold <- Boston %>% mutate(split = sample(rep(1:12, length.out = nrow(Boston))))
+
+#3. creating the output matrix with 12 rows and 6 columns
+output_matrix <- matrix(nrow = 12, ncol = 6)
+colnames(output_matrix) <- c("Linear", "Polynomial", "Piecewise Constant", "Piecewise Cubic", "Cubic Spline", "Natural Cubic Spline")
+
+#4. creating models and getting mses
+for(i in 1:12){
+  train <- boston_12fold %>% filter(split != i)
+  test <- boston_12fold %>% filter(split == i)
+  
+  brks <- c(-Inf, 7, 15, 22, Inf)
+  
+  linear <- lm(medv ~ lstat, data = train)
+  polynomial <- lm(medv ~ poly(lstat, 3), data = train)
+  piece_constant <- lm(medv ~ cut(lstat, brks), data = train)
+  piece_cubic <- lm(medv ~ piecewise_cubic_basis(lstat, 3), data = train)
+  cubic_spline <- lm(medv ~bs(lstat, knots = median(lstat)), data = train)
+  natural_cubic_spline <- lm(medv ~ ns(lstat, df = 3), data = train)
+  
+  output_matrix [i, ] <- c(
+    mse(test$medv, predict(linear, newdata = test)),
+    mse(test$medv, predict(polynomial, newdata = test)),
+    mse(test$medv, predict(piece_constant, newdata = test)),
+    mse(test$medv, predict(piece_cubic, newdata = test)),
+    mse(test$medv, predict(cubic_spline, newdata = test)),
+    mse(test$medv, predict(natural_cubic_spline, newdata = test))
+  )
+}
+
+#this is the comparison of the methods
+colMeans(output_matrix)
+
+#graph
+tibble(names = as_factor(colnames(output_matrix)), 
+       mse   = colMeans(output_matrix)) %>% 
+  ggplot(aes(x = names, y = mse, fill = names)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  scale_fill_viridis_d(guide = "none") +
+  labs(
+    x     = "Method", 
+    y     = "Mean squared error", 
+    title = "Comparing regression method prediction performance"
+  )
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

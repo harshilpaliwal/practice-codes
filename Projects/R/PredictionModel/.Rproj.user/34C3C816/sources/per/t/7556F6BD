@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1579171987572.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3521601809",
+    "id" : "7556F6BD",
+    "lastKnownWriteTime" : 1579197817,
+    "last_content_update" : 1579197819749,
+    "path" : "~/Programming/R/Data Analysis and Visualisation/Assignments/6776566PredictionModel/6776566PredictionModel.Rmd",
+    "project_path" : "6776566PredictionModel.Rmd",
+    "properties" : {
+        "cursorPosition" : "157,40",
+        "scrollLine" : "225",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

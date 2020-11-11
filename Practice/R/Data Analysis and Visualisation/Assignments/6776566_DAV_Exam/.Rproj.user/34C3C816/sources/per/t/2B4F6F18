@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1579879323543.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "2B4F6F18",
+    "lastKnownWriteTime" : 0,
+    "last_content_update" : 1579879323543,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "D87B1B50",
+        "caption" : "ccd_bees",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=ccd_bees&cache_key=D87B1B50",
+        "displayedObservations" : 4758,
+        "environment" : "",
+        "expression" : "ccd_bees",
+        "object" : "ccd_bees",
+        "preview" : 0,
+        "totalObservations" : 4758,
+        "variables" : 42
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

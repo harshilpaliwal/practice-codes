@@ -1,0 +1,224 @@
+---
+title: "6776566PredictionModel"
+params:
+  answers: true
+mainfont: Arial
+fontsize: 12pt
+urlcolor: blue
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    toc_float: true
+    theme: paper
+---
+
+About the dataset:
+This dataset is downloaded from Kaggle. This dataset contains house sale prices for King County, which includes Seattle. It includes homes sold between May 2014 and May 2015. It has attributes like size of the house, number of bedrooms, presence of waterfront, etc. to calculate the price of the house. Thus, the attribute Price depends on 21 different variables.
+Operations performed:
+The dataset was used to create supervised learning models using linear regression. I also attempted to perform feature selection and hyperparameter tuning using the glmnet package. In the feature selection process, I tried to select tweo, three and five best feature to predict the Price. In hyperparameter tuning, I tried to find the best penalty which can applied on the linear model for improvement. In the end, I created three different linear models and then compared each of their Mean Squared Error with each other.
+
+```{r}
+house_dataset <- read.csv("~/Programming/R/Data Analysis and Visualisation/Assignments/6776566PredictionModel/data/kc_house_data.csv")
+```
+
+```{r}
+library(ISLR)
+library(tidyverse)
+library(glmnet)
+
+set.seed(45)
+```
+
+```{r}
+#splitting the dataset
+splits <- c(rep("train", 10806), rep("validation", 6483), rep("test", 4324))
+
+house_dataset = house_dataset %>% mutate(splits = sample(splits))
+
+training_set <- house_dataset%>%filter(splits == "train")
+validation_set <- house_dataset%>%filter(splits == "validation")
+test_set <- house_dataset%>%filter(splits == "test")
+```
+
+```{r}
+#function to generate a linear model and calculate MSE
+lm_mse <- function(formula, train_data, valid_data) {
+  y_name <- as.character(formula)[2]
+  y_true <- valid_data[[y_name]]
+  
+  lm_fit <- lm(formula, train_data)
+  y_pred <- predict(lm_fit, newdata = valid_data)
+  
+  mean((y_true - y_pred)^2)
+}
+
+# R function to generate all formulas up to size n
+generate_formulas <- function(p, x_vars, y_var) {
+  if (p %% 1 != 0)           stop("Input an integer n")
+  if (p > length(x_vars))    stop("p should be smaller than number of vars")
+  if (!is.character(x_vars)) stop("x_vars should be a character vector")
+  if (!is.character(y_var))  stop("y_vars should be character type")
+  
+  apply(combn(x_vars, p), 2, function(vars) {
+    paste0(y_var, " ~ ", paste(vars, collapse = " + "))
+  })
+}
+```
+
+
+```{r}
+x_vars <- colnames(house_dataset)
+x_vars <- x_vars[x_vars != "price"]
+x_vars <- x_vars[x_vars != "splits"]
+x_vars <- x_vars[x_vars != "date"]
+
+y_var <- "price"
+
+formulas_1_pred <- generate_formulas(p = 2, x_vars = x_vars, y_var = y_var)
+formulas_2_pred <- generate_formulas(p = 3, x_vars = x_vars, y_var = y_var)
+formulas_3_pred <- generate_formulas(p = 5, x_vars = x_vars, y_var = y_var)
+formulas_4_pred <- generate_formulas(p = 19, x_vars = x_vars, y_var = y_var)
+
+mses_1 <- rep(1:length(formulas_1_pred))
+mses_2 <- rep(1:length(formulas_2_pred))
+mses_3 <- rep(1:length(formulas_3_pred))
+mses_4 <- rep(1:length(formulas_4_pred))
+
+for(i in 1:length(formulas_1_pred)) {
+  mses_1[i] <- lm_mse(as.formula(formulas_1_pred[i]), training_set, validation_set)
+}
+
+for(i in 1:length(formulas_2_pred)) {
+  mses_2[i] <- lm_mse(as.formula(formulas_2_pred[i]), training_set, validation_set)
+}
+
+for (i in 1:length(formulas_3_pred)) {
+  mses_3[i] <- lm_mse(as.formula(formulas_3_pred[i]), training_set, validation_set)
+  }
+
+for(i in 1:length(formulas_4_pred)) {
+  mses_4[i] <- lm_mse(as.formula(formulas_4_pred[i]), training_set, validation_set)
+}
+
+min(mses_1)
+min(mses_2)
+min(mses_3)
+min(mses_4)
+```
+
+```{r}
+
+best_one <- formulas_1_pred[which.min(mses_1)]
+best_one
+best_two <- formulas_2_pred[which.min(mses_2)]
+best_two
+best_three <- formulas_3_pred[which.min(mses_3)]
+best_three
+best_four <- formulas_4_pred[which.min(mses_4)]
+best_four
+```
+
+```{r}
+lm_all_vars <- lm(price ~ id + bedrooms + bathrooms + sqft_living + sqft_lot + floors + waterfront + view + condition + grade + sqft_above + sqft_basement + yr_built + yr_renovated + zipcode + lat + long + sqft_living15 + sqft_lot15, training_set)
+
+mse <- function(y_true, y_pred) {
+  mean((y_pred - y_true)^2)
+}
+
+mse_all_vars <- mse(test_set$price, predict(lm_all_vars, newdata = test_set))
+
+tibble(
+  y_true = test_set$price,
+  y_pred = predict(lm_all_vars, newdata = test_set)
+) %>%
+  ggplot(aes(x = y_pred, y = y_true)) + 
+  ggtitle("Plot comparing the true and predicted values of Price of the house. Linear Model uses all the predictors") +
+  geom_point() + 
+  geom_abline(slope = 1, intercept = 0, lty = 2)
+
+lm_best_vars <- lm(price ~ sqft_living + waterfront + grade + yr_built + lat, training_set)
+mse_best_vars <-mse(test_set$price, predict(lm_best_vars, newdata = test_set))
+
+tibble(
+  y_true = test_set$price,
+  y_pred = predict(lm_best_vars, newdata = test_set)
+) %>%
+  ggplot(aes(x = y_pred, y = y_true)) + 
+  ggtitle("Plot comparing the true and predicted values of Price of the house. Linear Model uses 5 best predictors") +
+  geom_point() + 
+  geom_abline(slope = 1, intercept = 0, lty = 2)
+```
+
+```{r}
+#Now that we have the five best predictors, let's plot some graphs to observe the relations between Predictors and Price of the House
+#Best predictors are: sqft_living, waterfront, grade, yr_built, lat
+
+ggplot(house_dataset, aes(x = sqft_living, y = price)) + geom_point(aes(colour = waterfront)) +
+labs(x = "Size of the House", y = "Price", title = "Plot shows how the price increases with size and presence of waterfront.")
+```
+```{r}
+ggplot(house_dataset, aes(x = grade, y = price)) + geom_point(aes(colour = waterfront)) +
+labs(x = "Grade", y = "Price", title = "Plot shows how the price increases with grade and presence of waterfront.")
+```
+```{r}
+house_dataset %>%
+  ggplot(aes(x = yr_built, y = price)) + 
+  geom_bar(stat = "identity", col = "black") + 
+  labs(title = "Plot shows how the price increases with year.")
+```
+
+
+
+
+
+```{r}
+#we are now trying to create another model using glmnet
+x_train <- model.matrix(price ~ ., data = training_set %>% select(-splits))
+x_valid <- model.matrix(price ~ ., data = validation_set %>% select(-splits))[, -1]
+
+#Tring to find the best lamba(penalty) for our model
+x_cv <- model.matrix(price ~ ., bind_rows(training_set, validation_set)[, -21])[, -1]
+result_cv <- cv.glmnet(x = x_cv,
+                       y = c(training_set$price, validation_set$price),
+                       nfolds = 15)
+best_lambda <- result_cv$lambda.min
+best_lambda
+
+#plotting the lambda values
+plot(result_cv)
+
+#we will now use the best lamba on the test set to get our results(Salary)
+x_test <- model.matrix(price ~ ., data = test_set %>% select(-splits))[, -1]
+y_pred <- as.numeric(predict(result_cv, newx = x_test, s = best_lambda))
+
+tibble(predictedPrice = y_pred,
+       observedPrice = test_set$price) %>%
+  ggplot(aes(x = predictedPrice, y = observedPrice)) + 
+  ggtitle("Plot comparing the true and predicted values of Price of the house. Linear Model uses best penalty for improvement.") +
+  geom_abline(slope = 1, intercept = 0, lty = 2) + 
+  geom_point()
+
+mse_best_lambda <- mse(test_set$price, y_pred)
+```
+
+```{r}
+#At this point we have three linear models:
+# 1. Linear model with best variable
+# 2. Linear model with all the variable
+# 3. Linear model using the penalty
+#Let's now asses how the MSE of each graph compares against the other
+
+mse_all <- c(mse_best_vars, mse_all_vars, mse_best_lambda)
+
+tibble(LinearModel = as.factor(c("Best Predictors", "All Predictors", "Best Penalty")), 
+       MSE = mse_all) %>%
+  ggplot(aes(x = LinearModel, y = MSE, fill = LinearModel)) + 
+  geom_bar(stat = "identity", col = "black") + 
+  labs(title = "Comparison of test set MSE for different prediction methods") +
+  theme(legend.position = "none")
+```
+
+
+
+

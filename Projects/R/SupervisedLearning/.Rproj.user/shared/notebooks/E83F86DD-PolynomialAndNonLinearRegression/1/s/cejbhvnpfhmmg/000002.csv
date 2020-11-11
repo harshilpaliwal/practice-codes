@@ -1,0 +1,4 @@
+"0","#natural cubic spline"
+"0",""
+"0","natural_cubic_spline <- lm(medv ~ ns(lstat, df = 3), data = Boston)"
+"0","pred_plot(natural_cubic_spline)"

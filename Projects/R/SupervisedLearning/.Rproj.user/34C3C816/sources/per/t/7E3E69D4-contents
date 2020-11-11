@@ -1,0 +1,138 @@
+---
+title: "LinearRegressionAndMSE"
+params:
+  answers: true
+mainfont: Arial
+fontsize: 12pt
+urlcolor: blue
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    toc_float: true
+    theme: paper
+---
+```{r}
+library(ISLR)
+library(MASS)
+library(tidyverse)
+```
+
+```{r}
+#lstat - lower status of the population (percent)
+#medv - median value of owner-occupied homes in \$1000s
+
+lm_ses <- lm(formula = medv~lstat, data = Boston)
+coef(lm_ses) #gives us the intercept and slope
+summary(lm_ses)
+```
+```{r}
+y_pred <- predict(lm_ses)
+
+tibble(predicted_values = y_pred, actual_values = Boston$medv) %>%
+  ggplot(aes(x = predicted_values, y = actual_values)) + 
+  geom_point() + 
+  geom_abline(slope = 1)
+```
+
+
+```{r}
+new_dataset <- tibble(lstat = seq(0, 40, length.out = 1000)) #creating a new dataset with our own lstat values
+
+#getting new predictions from the new dataset. This is our new medv
+new_y_pred <- predict(lm_ses, newdata = new_dataset) 
+
+#adding this new medv to our new dataset as a column
+new_dataset <- new_dataset %>% mutate(medv = new_y_pred)
+```
+
+```{r}
+scatr_plot <-
+  Boston %>%
+  ggplot(aes(x = lstat, y = medv)) + 
+  geom_point()
+
+scatr_plot
+```
+
+
+```{r}
+scatr_plot + geom_line(data = new_dataset)
+
+#what we are doing is simply comparing the old and new predictions. We are checking how much the new predictions "FITS" the old ones.
+```
+```{r}
+ #now we try to calculate the confidence intervals
+
+y_pred_cintervals <- predict(lm_ses, newdata = new_dataset, interval = "confidence")
+
+#we now create a new dataset wherein the medv is within the confidence interval limits.
+plot_cinterval <- tibble(lstat = new_dataset$lstat, medv = y_pred_cintervals[,1], 
+                        lower_lim = y_pred_intervals[,2],
+                        upper_lim = y_pred_intervals[,3])
+
+Boston %>%
+  ggplot(aes(x = lstat, y = medv)) + 
+  geom_ribbon(aes(ymin = lower_lim, ymax = upper_lim), data = plot_cinterval, fill = "blue") + 
+  geom_point(colour = "red") + 
+  geom_line(data = new_dataset, colour = "yellow", size = 1)
+
+
+ #now we try to calculate the prediction intervals
+y_pred_pintervals <- predict(lm_ses, newdata = new_dataset, interval = "prediction")
+
+plot_pinterval <- tibble(lstat = new_dataset$lstat, medv = y_pred_pintervals[, 1],
+                         lower_lim = y_pred_pintervals[, 2],
+                         upper_lim = y_pred_pintervals[, 3])
+
+Boston %>%
+  ggplot(aes(x = lstat, y = medv)) + 
+  geom_ribbon(aes(ymin = plot_pinterval$lower_lim, ymax = plot_pinterval$upper_lim), data = plot_pinterval, fill = "black") + 
+  geom_ribbon(aes(ymin = lower_lim, ymax = upper_lim), data = plot_cinterval, fill = "blue") +
+  geom_line(data = new_dataset, colour = "yellow", size = 1) + 
+  geom_point(colour = "red")
+```
+
+```{r}
+#Mean Squared Error
+
+mse <- function(y_true, y_predicted) {
+  mean((y_true - y_predicted)^2)
+}
+
+#numerical mse
+mse(Boston$medv, predict(lm_ses))
+
+#visualized mse
+Boston %>%
+  ggplot(aes(x = lstat, y = medv)) + 
+  geom_point(color = "red") + 
+  geom_line(data = new_dataset, colour = "yellow", size = 1) + 
+  geom_segment(aes(xend = lstat, yend = predict(lm_ses)), lty = 2)
+```
+
+```{r}
+#Splitting data into Training, Validation and Test sets. We do this by creating  a new data frames
+#we create a new column splits and then add this to the boston dataset creating a df names master_set in the process.
+#we then split this master_set into three sets
+
+splits <- c(rep("train", 253), rep("validation", 152), rep("test", 101))
+
+master_set = Boston %>% mutate(splits = sample(splits))
+
+train_set <- master_set%>%filter(splits == "train")
+validation_set <- master_set%>%filter(splits == "validaiton")
+test_set <- master_set%>%filter(splits == "test")
+```
+
+
+```{r}
+model_train <- lm(medv~lstat, data = train_set)
+
+mse_model_train <- mse(y_true = train_set$medv, y_predicted = predict(model_train))
+```
+
+```{r}
+mse_model_validation <- mse(y_true = train_set$medv, y_predicted = predict(model_train, newdata = validation_set))
+```
+

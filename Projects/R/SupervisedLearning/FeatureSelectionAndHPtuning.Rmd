@@ -1,0 +1,232 @@
+---
+title: "FeatureSelectAndHPtuning"
+params:
+  answers: false
+mainfont: Arial
+fontsize: 12pt
+urlcolor: blue
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    toc_float: true
+    df_print: paged
+    theme: paper
+---
+
+```{r}
+library(ISLR)
+library(glmnet)
+library(tidyverse)
+
+set.seed(45)
+```
+
+```{r}
+baseball <- Hitters %>% filter(!is.na(Salary))
+nrow(baseball)
+
+split <- c(rep("train", 132), rep("valid", 79), rep("test",  52))
+
+baseball <- baseball %>%mutate(split = sample(split))
+train_set <- baseball %>% filter(split == "train")
+validation_set <- baseball %>% filter(split == "valid")
+test_set <- baseball %>% filter(split == "test")
+```
+
+```{r}
+lm_mse <- function(formula, train_data, valid_data) {
+  y_name <- as.character(formula)[2]
+  y_true <- valid_data[[y_name]] #value = Hits+Runs, whatever is after ~
+  
+  lm_fit <- lm(formula, train_data)
+  y_pred <- predict(lm_fit, newdata = valid_data)
+  
+  mean((y_true - y_pred)^2)
+}
+
+lm_mse(Salary ~ Hits + Runs, train_set, validation_set)
+```
+```{r}
+source("generateFormulas.R")
+#example: generate_formulas(p=2, x_vars = c("x1", "x2", "x3", "x4"), y_var = "y")
+
+x_vars <- colnames(Hitters)
+x_vars <- x_vars[x_vars != "Salary"]
+
+y_var <- "Salary"
+
+formulas_3_pred <- generate_formulas(p = 3, x_vars = x_vars, y_var = y_var)
+length(formulas_3_pred)
+
+#finding the best predictor formulas:
+
+mses_3 <- rep(1:969)
+
+for(i in 1:969) {
+  mses_3[i] <- lm_mse(as.formula(formulas_3_pred[i]), train_set, validation_set)
+}
+
+best_three <- formulas_3_pred[which.min(mses_3)]
+best_three
+```
+```{r}
+#doing the same for 1, 2 and 4 predictors
+
+formulas_1_pred <- generate_formulas(p = 1, x_vars = x_vars, y_var = y_var)
+formulas_2_pred <- generate_formulas(p = 2, x_vars = x_vars, y_var = y_var)
+formulas_4_pred <- generate_formulas(p = 4, x_vars = x_vars, y_var = y_var)
+
+mses_1 <- rep(1:length(formulas_1_pred))
+mses_2 <- rep(1:length(formulas_2_pred))
+mses_4 <- rep(1:length(formulas_4_pred))
+
+for(i in 1:length(formulas_1_pred)) {
+  mses_1[i] <- lm_mse(as.formula(formulas_1_pred[i]), train_set, validation_set)
+}
+
+for(i in 1:length(formulas_2_pred)) {
+  mses_2[i] <- lm_mse(as.formula(formulas_2_pred[i]), train_set, validation_set)
+}
+
+for(i in 1:length(formulas_4_pred)) {
+  mses_4[i] <- lm_mse(as.formula(formulas_4_pred[i]), train_set, validation_set)
+}
+
+best_one <- formulas_1_pred[which.min(mses_1)]
+best_two <- formulas_2_pred[which.min(mses_2)]
+best_four <- formulas_4_pred[which.min(mses_4)]
+best_one
+best_two
+best_four
+```
+
+```{r}
+#caluclate the best MSE(lowest one), that will give us the best formula
+print(min(mses_1))
+print(min(mses_2))
+print(min(mses_3))
+print(min(mses_4))
+
+#lowest is mse_4. Thus best formula comes from formulas_4_pred
+formulas_4_pred[which.min(mses_4)]
+```
+```{r}
+#calculating MSE for the test set and then creating a plot between true and predicted values of Salary
+
+lm_best <- lm(Salary ~ Years + CAtBat + CHits + PutOuts, train_set)
+mse <- function(y_true, y_pred) {
+  mean((y_pred - y_true)^2)
+}
+
+mse(test_set$Salary, predict(lm_best, newdata = test_set))
+
+tibble(
+  y_true = test_set$Salary,
+  y_pred = predict(lm_best, newdata = test_set)
+) %>%
+  ggplot(aes(x = y_pred, y = y_true)) + 
+  geom_point() + 
+  geom_abline(slope = 1, intercept = 0, lty = 2)
+```
+```{r}
+#The above method was pretty manual and hence time taking and inefficient.
+#We will now use glmnet and LASSO penalty to improve and quicken the results.
+
+x_train <- model.matrix(Salary ~ ., data = train_set %>% select(-split)) #dot in the formula means all available variables
+x_valid <- model.matrix(Salary ~ ., data = validation_set %>% select(-split))[, -1]
+#results below is a LIST
+result <- glmnet(x = x_train[, -1], #predicted values of Salary, -1 mean we exclude the intercept column
+                 y = train_set$Salary,
+                 family = "gaussian", #instead of MSE we now using Normally Distributed Errors
+                 alpha = 1, #selecting the LASSO penalty
+                 lambda = 15 #penalty value
+                 )
+
+rownames(coef(result))[which(coef(result) != 0)]
+
+#creating a true vs predicted plot
+
+y_pred <- as.numeric(predict(result, newx = x_valid))
+
+tibble(ObservedValue = validation_set$Salary,
+       PredictedValue = y_pred) %>%
+  ggplot(aes(x = PredictedValue, 
+             y = ObservedValue)) + 
+  geom_point() + 
+  geom_abline(slope = 1, intercept = 0, lty = 2)
+```
+```{r}
+#The graph looks a bit better. Now to improve more, we need to select the best penalty or lamba value.
+
+result_nopenalty <- glmnet(x = x_train[, -1],
+                           y = train_set$Salary,
+                           family = "gaussian")
+plot(result_nopenalty)
+
+#we use the function cv.glmnet
+x_cv <- model.matrix(Salary ~ ., bind_rows(train_set, validation_set)[, -21])[, -1]
+result_cv <- cv.glmnet(x = x_cv,
+                       y = c(train_set$Salary, validation_set$Salary),
+                       nfolds = 15)
+best_lambda <- result_cv$lambda.min
+best_lambda
+
+plot(result_cv)
+```
+
+```{r}
+#we will now use the best lamba on the test set to get our results(Salary)
+x_test <- model.matrix(Salary ~ ., data = test_set %>% select(-split))[, -1]
+y_pred <- as.numeric(predict(result_cv, newx = x_test, s = best_lambda))
+
+tibble(predictedSalary = y_pred,
+       observedSalary = test_set$Salary) %>%
+  ggplot(aes(x = predictedSalary, y = observedSalary)) + 
+  geom_abline(slope = 1, intercept = 0, lty = 2) + 
+  geom_point()
+
+mse(test_set$Salary, y_pred)
+```
+```{r}
+#Create a bar plot comparing the test set (baseball_test) MSE of (a) linear regression with all variables, (b) the best subset selection regression model we created, (c) LASSO with lambda set to 50, and (d) LASSO with cross-validated lambda. As training dataset, use the rows in both the `baseball_train` and `baseball_valid
+
+#1. creating the training set
+training_set_lm <- bind_rows(train_set, validation_set)[, -21]
+training_set_matrix <- model.matrix(Salary ~ ., bind_rows(train_set, validation_set)[, -21])[, -1]
+test_matrix <- model.matrix(Salary ~ ., data = test_set %>% select(-split))[, -1]
+
+#creating prediction models
+lm_allvars <- lm(Salary ~ ., data = training_set_lm)
+y_pred_allvars <- predict(lm_allvars, newdata = test_set)
+
+lm_bestvars <- lm(Salary ~ Years + CAtBat + CHits + PutOuts, data = training_set_lm)
+y_pred_bestvars <- predict(lm_bestvars, newdata = test_set)
+
+lm_lambda50 <- glmnet(x = training_set_matrix,
+                      y = c(train_set$Salary, validation_set$Salary),
+                      lambda = 50)
+y_pred_lambda50 <- as.numeric(predict(lm_lambda50, newx = test_matrix))
+
+lm_bestlambda <- cv.glmnet(x = training_set_matrix,
+                            y = c(train_set$Salary, validation_set$Salary),
+                            nfolds = 15)
+y_pred_bestlambda <- as.numeric(predict(lm_lambda50, newx = test_matrix, s = best_lambda))
+
+#3. calculations MSES
+mse_all <- c(
+  mse(test_set$Salary, y_pred_allvars),
+  mse(test_set$Salary, y_pred_bestvars),
+  mse(test_set$Salary, y_pred_lambda50),
+  mse(test_set$Salary, y_pred_bestlambda)
+)
+
+#4. creating bar graph
+tibble(Method = as.factor(c("lm", "subset", "lasso", "cv_las")), 
+       MSE = mse_all) %>%
+  ggplot(aes(x = Method, y = MSE, fill = Method)) + 
+  geom_bar(stat = "identity", col = "black") + 
+  labs(title = "Comparison of test set MSE for different prediction methods") +
+  theme(legend.position = "none")
+```
+

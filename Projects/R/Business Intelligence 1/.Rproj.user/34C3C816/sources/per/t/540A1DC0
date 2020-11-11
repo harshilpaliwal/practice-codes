@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1596730806651.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "328076372",
+    "id" : "540A1DC0",
+    "lastKnownWriteTime" : 1596730307,
+    "last_content_update" : 1596730307,
+    "path" : "~/Programming/Projects/R/Business Intelligence 1/task1.R",
+    "project_path" : "task1.R",
+    "properties" : {
+        "cursorPosition" : "652,89",
+        "scrollLine" : "623"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

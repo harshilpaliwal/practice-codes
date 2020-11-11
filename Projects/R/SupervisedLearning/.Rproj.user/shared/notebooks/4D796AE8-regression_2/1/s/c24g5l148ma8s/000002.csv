@@ -1,0 +1,8 @@
+"2","r error 4 (R code execution error)"
+"0","baseball <- Hitters %>% filter(!is.na(Salary))"
+"0",""
+"0","nrow(baseball)"
+"1","[1]"
+"1"," 263"
+"1","
+"

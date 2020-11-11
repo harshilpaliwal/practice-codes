@@ -1,0 +1,139 @@
+[1] TRUE
+[1] TRUE
+Parsed with column specification:
+cols(
+  rownames = col_double(),
+  cid = col_double(),
+  residence_code = col_double(),
+  residence_name = col_character(),
+  gender = col_character(),
+  age = col_double()
+)
+Parsed with column specification:
+cols(
+  rownames = col_double(),
+  cid = col_double(),
+  date = col_date(format = ""),
+  has_fever = col_logical(),
+  has_cough = col_logical(),
+  has_fatigue = col_logical(),
+  has_dyspnea = col_logical(),
+  has_anorexia = col_logical(),
+  has_anosmia = col_logical(),
+  has_obesity = col_logical(),
+  status = col_character(),
+  hospital_admission = col_logical()
+)
+Parsed with column specification:
+cols(
+  rownames = col_double(),
+  tid = col_double(),
+  cid = col_double(),
+  last_country = col_character(),
+  flight_number = col_character(),
+  flight_departure_date = col_date(format = ""),
+  flight_arrival_date = col_date(format = "")
+)
+Parsed with column specification:
+cols(
+  X1 = col_double(),
+  DHB2015_name = col_character(),
+  DHB2015_code = col_double(),
+  AU2017_code = col_double(),
+  AU2017_name = col_character()
+)
+Warning message:
+Missing column names filled in: 'X1' [1] 
+[1] "Answer to question 1 has been saved in file <answer_1.RData>."
+[1] TRUE
+Error in charToDate(x) : 
+  character string is not in a standard unambiguous format
+[1] "Answer to question 2 has been saved in file <answer_2.RData>."
+[1] TRUE
+[1] "Answer to question 3 has been saved in file <answer_3.RData>."
+[1] TRUE
+[1] "Answer to question 4 has been saved in file <answer_4.RData>."
+[1] TRUE
+[1] "Answer to question 5a has been saved in file <answer_5a.RData>."
+[1] TRUE
+[1] "Answer to question 5b has been saved in file <answer_5b.RData>."
+[1] TRUE
+[1] 234
+[1] "Answer to question 6a has been saved in file <answer_6a.RData>."
+[1] TRUE
+[1] "Answer to question 6b has been saved in file <answer_6b.RData>."
+[1] TRUE
+[1] "Answer to question 7a has been saved in file <answer_7a.RData>."
+[1] TRUE
+[1] "Answer to question 7b has been saved in file <answer_7b.RData>."
+[1] TRUE
+[1] "Answer to question 8a has been saved in file <answer_8a.RData>."
+[1] TRUE
+[1] "Answer to question 8b has been saved in file <answer_8b.RData>."
+[1] TRUE
+[1] "Answer to question 9a has been saved in file <answer_9a.RData>."
+[1] TRUE
+[1] "Answer to question 9b has been saved in file <answer_9b.RData>."
+[1] TRUE
+[1] "Answer to question 10a has been saved in file <answer_10a.RData>."
+[1] TRUE
+[1] "Answer to question 10b has been saved in file <answer_10b.RData>."
+[1] TRUE
+[1] "Answer to question 11a has been saved in file <answer_11a.RData>."
+[1] TRUE
+[1] "Answer to question 11b has been saved in file <answer_11b.RData>."
+[1] TRUE
+[1] "Answer to question 12a has been saved in file <answer_12a.RData>."
+[1] TRUE
+[1] "Answer to question 12b has been saved in file <answer_12b.RData>."
+[1] TRUE
+[1] "Answer to question 13a has been saved in file <answer_13a.RData>."
+[1] TRUE
+[1] "Answer to question 13b has been saved in file <answer_13b.RData>."
+[1] TRUE
+[1] TRUE
+[1] TRUE
+[1] TRUE
+[1] "Answer to question 14a has been saved in file <answer_14a.RData>."
+[1] TRUE
+[1] "Answer to question 14b has been saved in file <answer_14b.RData>."
+[1] TRUE
+[1] "Answer to question 15a has been saved in file <answer_15a.RData>."
+[1] TRUE
+[1] "Answer to question 15b has been saved in file <answer_15b.RData>."
+[1] TRUE
+[1] "Answer to question 16a has been saved in file <answer_16a.RData>."
+[1] TRUE
+[1] "Answer to question 16b has been saved in file <answer_16b.RData>."
+[1] TRUE
+[1] "Answer to question 17a has been saved in file <answer_17a.RData>."
+[1] TRUE
+[1] "Answer to question 17b has been saved in file <answer_17b.RData>."
+[1] TRUE
+[1] "Answer to question 18a has been saved in file <answer_18a.RData>."
+[1] TRUE
+[1] "Answer to question 18b has been saved in file <answer_18b.RData>."
+[1] TRUE
+[1] "Answer to question 19a has been saved in file <answer_19a.RData>."
+[1] TRUE
+[1] "Answer to question 19b has been saved in file <answer_19b.RData>."
+[1] TRUE
+[1] TRUE
+[1] "Answer to question 20 has been saved in file <answer_20.RData>."
+[1] TRUE
+[1] "Answer to question 21 has been saved in file <answer_21.RData>."
+[1] TRUE
+[1] "Answer to question 22 has been saved in file <answer_22.RData>."
+[1] TRUE
+[1] "Answer to question 23a has been saved in file <answer_23a.RData>."
+[1] TRUE
+[1] "Answer to question 23b has been saved in file <answer_23b.RData>."
+[1] TRUE
+[1] "Answer to question 23c has been saved in file <answer_23c.RData>."
+[1] TRUE
+[1] "Answer to question 23d has been saved in file <answer_23d.RData>."
+[1] TRUE
+null device 
+          1 
+[1] "Answer to question 23e has been saved in file <answer_23e.pdf>."
+[1] TRUE

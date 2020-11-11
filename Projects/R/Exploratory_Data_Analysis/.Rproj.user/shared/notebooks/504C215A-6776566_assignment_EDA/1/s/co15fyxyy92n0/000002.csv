@@ -1,0 +1,4 @@
+"0","star_dataset %>%"
+"0","  ggplot(aes(x = Temperature..K., y = Luminosity.L.Lo.)) + geom_point(aes(colour = Star.type)) + "
+"0","  labs(x = ""Temprature"", y = ""Brightness"", title = ""Plot showing relation between temprature and brightness of a star."")"
+"0",""

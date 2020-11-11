@@ -1,0 +1,3 @@
+"0","TempBright <- ggplot(star_dataset, aes(x = Temperature..K., y = Luminosity.L.Lo.)) + geom_point() + geom_smooth(method = ""lm"") + labs(x = ""Temprature"", y = ""Brightness"", title = ""Plot showing relation between temprature and brightness of a star."") + geom_density_2d() + theme_minimal()"
+"0",""
+"0","TempBright"

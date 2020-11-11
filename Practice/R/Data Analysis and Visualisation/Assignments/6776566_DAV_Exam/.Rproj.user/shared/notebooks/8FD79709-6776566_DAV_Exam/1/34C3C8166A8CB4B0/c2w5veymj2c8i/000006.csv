@@ -1,0 +1,5 @@
+"0","#5. Show the confusion matrix of predictions from your model, for the test data. [2 points]"
+"0","prob_lr <- predict(log_reg, type = ""CCD"")"
+"2","Error in match.arg(type) : 
+  'arg' should be one of “link”, “response”, “terms”
+"

@@ -1,0 +1,2 @@
+"0","#Which country suffered the highest winter mortality this year? [1 point]"
+"0","unique(bees %>% filter(Winter_mortality == max(Winter_mortality)) %>% dplyr::select(Country))"

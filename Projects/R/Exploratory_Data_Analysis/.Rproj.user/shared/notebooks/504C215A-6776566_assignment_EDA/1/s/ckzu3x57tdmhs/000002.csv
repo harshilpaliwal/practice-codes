@@ -1,0 +1,4 @@
+"0","ClassSize <- ggplot(star_dataset, aes(x = Spectral.Class, y = Radius.R.Ro.)) + geom_point() +"
+"0","labs(x = ""Class"", y = ""Size"") + geom_text(aes(label = Star.type, colour = Star.type), check_overlap = TRUE, size = 4, hjust = 1.5, yjust = 1.5)"
+"2","Ignoring unknown parameters: yjust"
+"0","ClassSize"

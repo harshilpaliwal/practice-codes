@@ -1,0 +1,3 @@
+"0",""
+"0","pc3_mod <- lm(medv ~ piecewise_cubic_basis(lstat, 3), data = Boston)"
+"0","pred_plot(pc3_mod)"

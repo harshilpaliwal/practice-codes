@@ -1,0 +1,8 @@
+"0","plot_grid("
+"0","  pred_plot(lin_mod) + ggtitle(""Linear regression""),"
+"0","  pred_plot(polyreg_mod1) + ggtitle(""Polynomial""),"
+"0","  pred_plot(polyreg_mod5) + ggtitle(""Piecewise constant""),"
+"0","  pred_plot(pc3_mod) + ggtitle(""Piecewise cubic""),"
+"0","  pred_plot(spline_mod) + ggtitle(""Cubic spline""),"
+"0","  pred_plot(natural_cubic_spline) + ggtitle(""Natural spline"")"
+"0",")"

@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1579875964431.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4260541282",
+    "id" : "F2B7544F",
+    "lastKnownWriteTime" : 1565240020,
+    "last_content_update" : 1565240020,
+    "path" : "~/Programming/R/Data Analysis and Visualisation/vankesteren-dav_practicals-43edab7/08_Supervised_learning_Classification_1/classification_1.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "87,0",
+        "scrollLine" : "67"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

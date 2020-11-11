@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1579879020895.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4132310034",
+    "id" : "C3E69B44",
+    "lastKnownWriteTime" : 1579879552,
+    "last_content_update" : 1579879552886,
+    "path" : "~/Programming/R/Data Analysis and Visualisation/Assignments/6776566_DAV_Exam/6776566_DAV_Exam.Rmd",
+    "project_path" : "6776566_DAV_Exam.Rmd",
+    "properties" : {
+        "cursorPosition" : "135,38",
+        "scrollLine" : "123",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

@@ -1,0 +1,6 @@
+"0","max(star_dataset$Radius.R.Ro.) "
+"1","[1]"
+"1"," 1948.5"
+"1","
+"
+"0","star_dataset %>% filter(Radius.R.Ro. == 1948.5) %>% select(Temperature..K., Luminosity.L.Lo., Radius.R.Ro., Absolute.magnitude.Mv., Star.type, Star.color, Spectral.Class)"

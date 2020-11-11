@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1579106513665.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1127469936",
+    "id" : "82AB2A36",
+    "lastKnownWriteTime" : 1579013739,
+    "last_content_update" : 1579170361835,
+    "path" : "~/Programming/R/SupervisedLearning/FeatureSelectionAndHPtuning.Rmd",
+    "project_path" : "FeatureSelectionAndHPtuning.Rmd",
+    "properties" : {
+        "cursorPosition" : "224,0",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

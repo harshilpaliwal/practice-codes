@@ -1,0 +1,2 @@
+"0","TypeBright <- ggplot(star_dataset, aes(x = Star.type, y = Luminosity.L.Lo.)) + geom_point() +"
+"0","labs(x = ""Type"", y = ""Brightness"", title = ""Plot showing how the Type of a star affects its luminosity"") + geom_density_2d() + theme_minimal()"

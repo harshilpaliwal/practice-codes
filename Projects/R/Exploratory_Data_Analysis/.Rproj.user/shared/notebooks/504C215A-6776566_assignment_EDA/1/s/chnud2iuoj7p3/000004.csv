@@ -1,0 +1,6 @@
+"0","max(star_dataset$Luminosity.L.Lo.) "
+"1","[1]"
+"1"," 849420"
+"1","
+"
+"0","star_dataset %>% filter(Luminosity.L.Lo. == 849420) %>% select(Temperature..K., Luminosity.L.Lo., Radius.R.Ro., Absolute.magnitude.Mv., Star.type, Star.color, Spectral.Class)"

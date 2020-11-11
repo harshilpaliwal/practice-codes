@@ -1,0 +1,5 @@
+"2","r error 4 (R code execution error)"
+"0","lm_mse(Salary ~ Hits + Runs, baseball_train, baseball_valid)"
+"2","Error in lm_mse(Salary ~ Hits + Runs, baseball_train, baseball_valid) : 
+  object 'baseball_valid' not found
+"

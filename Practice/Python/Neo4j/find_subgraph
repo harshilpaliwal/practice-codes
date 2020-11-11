@@ -1,0 +1,39 @@
+import csv
+from neo4j import GraphDatabase, basic_auth, Driver
+from py2neo import Graph
+
+host = "bolt://localhost:7687"
+password = "accessdenied"
+
+graph = Graph(password = "accessdenied")
+
+def get_graph():
+    results = graph.run("Match (m:Movie)<-[:ACTED_IN]-(a:Person)"
+                        "Return m.title as movie, collect(a.name)as cast"
+                        )
+
+    nodes = []
+    rels = []
+
+    i = 0
+    for movie, cast in results:
+        nodes.append({"title": movie, "label": movie})
+        target = i
+        i += 1
+        for name in cast:
+            actor = {"title": name, "label": "actor"}
+            try:
+                source = nodes.index(actor)
+            except ValueError:
+                nodes.append(actor)
+                source = i
+                i += 1
+        rels.append({"source": source, "target": target})
+
+    print(nodes)
+    print(rels)
+    return {"nodes": nodes, "links": rels}
+
+get_graph()
+
+

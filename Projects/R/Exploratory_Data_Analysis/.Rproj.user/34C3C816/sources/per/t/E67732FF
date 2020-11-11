@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1574987634382.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2242398027",
+    "id" : "E67732FF",
+    "lastKnownWriteTime" : 1571683632,
+    "last_content_update" : 1571683632,
+    "path" : "~/Programming/R/Data Analysis and Visualisation/Assignments/6776566Exploratory_Data_Analysis/data/star_dataset.csv",
+    "project_path" : "data/star_dataset.csv",
+    "properties" : {
+        "cursorPosition" : "0,104",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "text"
+}

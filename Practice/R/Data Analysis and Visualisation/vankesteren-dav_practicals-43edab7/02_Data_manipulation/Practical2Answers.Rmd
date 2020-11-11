@@ -1,0 +1,17 @@
+---
+title: "Practical2Answers"
+date: "25-11-2019"
+mainfont: Arial
+fontsize: 12pt
+urlcolor: blue
+
+output: html_document
+---
+
+Load packages:
+'''
+library(ISLR)
+library(tidyverse)
+library(haven)
+library(readxl)
+'''

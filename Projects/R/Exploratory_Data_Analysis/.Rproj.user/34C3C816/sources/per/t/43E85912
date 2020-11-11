@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1574792758019.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "43E85912",
+    "lastKnownWriteTime" : 0,
+    "last_content_update" : 1574792758019,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "5104FC19",
+        "caption" : "star_dataset",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=star_dataset&cache_key=5104FC19",
+        "displayedObservations" : "240",
+        "environment" : "",
+        "expression" : "star_dataset",
+        "object" : "star_dataset",
+        "preview" : "0",
+        "totalObservations" : "240",
+        "variables" : "7"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

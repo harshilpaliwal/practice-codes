@@ -1,0 +1,2 @@
+"0","ggplot(house_dataset, aes(x = grade, y = price)) + geom_point(aes(colour = waterfront)) +"
+"0","labs(x = ""Grade"", y = ""Price"", title = ""Plot shows how the price increases with grade and presence of waterfront."")"

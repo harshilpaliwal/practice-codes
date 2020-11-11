@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1579189397349.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "6BACFAAB",
+    "lastKnownWriteTime" : 3482461398875766785,
+    "last_content_update" : 1579189397349,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "63A292E",
+        "caption" : "house_dataset",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=house_dataset&cache_key=63A292E",
+        "displayedObservations" : 21613,
+        "environment" : "",
+        "expression" : "house_dataset",
+        "object" : "house_dataset",
+        "preview" : 0,
+        "totalObservations" : 21613,
+        "variables" : 22
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

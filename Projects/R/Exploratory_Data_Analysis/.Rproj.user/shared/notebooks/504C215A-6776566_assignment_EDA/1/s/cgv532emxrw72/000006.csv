@@ -1,0 +1,3 @@
+"0","TypeSize <- ggplot(star_dataset, aes(x = Star.type, y = Radius.R.Ro.)) + geom_point(aes(colour = Spectral.Class)) +"
+"0","labs(x = ""Type"", y = ""Size"")"
+"0","TypeSize"

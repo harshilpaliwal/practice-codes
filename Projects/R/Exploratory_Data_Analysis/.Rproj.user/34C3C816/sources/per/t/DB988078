@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1574792822246.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "986436324",
+    "id" : "DB988078",
+    "lastKnownWriteTime" : 1574986677,
+    "last_content_update" : 1574986677850,
+    "path" : "~/Programming/R/Data Analysis and Visualisation/Assignments/6776566Exploratory_Data_Analysis/6776566_assignment_EDA.Rmd",
+    "project_path" : "6776566_assignment_EDA.Rmd",
+    "properties" : {
+        "cursorPosition" : "94,0",
+        "scrollLine" : "87",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

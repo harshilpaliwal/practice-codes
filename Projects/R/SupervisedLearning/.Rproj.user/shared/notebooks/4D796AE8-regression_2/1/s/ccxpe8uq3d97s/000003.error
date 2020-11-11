@@ -1,0 +1,1 @@
+{"frames":[{"character_number":0,"end_character_number":0,"end_line_number":0,"file":"","func":"lm_mse(Salary ~ Hits + Runs, baseball_train, baseball_valid)","line_number":0}],"message":"Error in lm_mse(Salary ~ Hits + Runs, baseball_train, baseball_valid) : \n  object 'baseball_valid' not found\n"}

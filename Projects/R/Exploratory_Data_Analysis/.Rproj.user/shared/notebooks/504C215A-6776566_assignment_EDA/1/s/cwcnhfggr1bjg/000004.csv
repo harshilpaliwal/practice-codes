@@ -1,0 +1,1 @@
+"0","plot(x = star_dataset$Star.type, y = star_dataset$Luminosity.L.Lo., xlab = ""Type"", ylab = ""Brightness"")"

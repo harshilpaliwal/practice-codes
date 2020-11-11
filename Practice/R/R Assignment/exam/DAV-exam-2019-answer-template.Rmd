@@ -1,0 +1,95 @@
+---
+title: "DAV exam answers"
+author: Your name (student number 123456)
+date: "24 Jan 2020"
+output: pdf_document
+geometry: margin=2cm
+---
+
+
+PLEASE FILL IN YOUR NAME AND STUDENT NUMBER HERE AS WELL:
+ 
+ * Student number: 
+
+ * Last name:
+ 
+ * First name:
+
+
+Give your answers in the text below.
+
+## Q1. Visualization
+
+For each of the following two graphics (Figure 1 and Figure 2), answer these questions:
+
+  * Q1(a): Name its aesthetics, geoms, scales, and facets.
+That is, name the variables to which various aesthetics etc. are mapped.
+Also name any statistical transformations or special coordinate systems. [1 point]
+
+Here is an example of an answer. Replace this with your own answer.
+
+
+  * Q1(b): Give at least three suggestions for improvement of the visualization, and explain your rationale. [1 point]
+
+
+
+## Theoretical questions
+
+ **Q2.** Suppose you are given a **supervised** regression task. There are many possible models that could accomplish such a task. Which one is the best?
+ [1 point]
+ 
+ **Q3.** Suppose you are given an **unsupervised** task. There are many possible models that could accomplish such a task. Which one is the best?
+ [1 point]
+ 
+ **Q4.** For each of the following supervised learning situations, indicate which of the following feature selection/regularization techniques are most likely to be useful. Explain your rationale.
+ [3 points]
+ 
+Several answers may apply. You may not need to mention all four techniques a-d.
+ 
+Techniques: 
+
+  a. variance filter;
+  b. correlation filter;
+  c. random forest-based wrapper;
+  d. L2 penalization.
+  
+Situations:
+
+  1. A raw, uncleaned dataset with many noisy features, many of which are mostly zero;
+  
+  2. A dataset in which many features are almost the same (e.g. age and birth year);
+  
+  3. The client wants you to run a linear regression and is interested in unbiased estimates of the coefficients.
+  
+
+
+**Q5.**
+ 
+ See the below PCA biplot of Chicago neighborhoods. (The center contains some illegible variable names; you can ignore these.)
+ [3 points]
+ 
+ * Q5a. How much of the total variation in the neighborhood characteristics do the first two  principal components explain?
+  
+ * Q5b. Is income positively or negatively associated with crime? How can you tell from the biplot?
+ 
+ * Q5c. Which explains more crime variance: median income or median housing value? How can you tell?
+ 
+ 
+
+## Practical questions: bee health
+
+
+1. Load the dataset `bees.csv` and split it into a training (80%) and test set (20%). Use the training set for EDA and model development. [1 point]
+
+2. Which country suffered the highest winter mortality this year? [1 point]
+
+3. Which country experienced the highest rate of CCD? (HINT: use `Winter_mortality` to work out if CCD occured) [1 point]
+
+4. Use logistic regression to predict CCD from the other features in the dataset. (HINT: add the previously calculated feature to the dataset) [2 points]
+
+5. Show the confusion matrix of predictions from your model, for the test data.  [2 points]
+
+6. What are the accuracy, recall, and precision of your model? [1 points]
+
+
+7. COMPLETELY _OPTIONAL_ HYPERBONUS: compare the test performance of the following models: L2-penalized logistic regression, random forest, and gradient boosting. Performance should be evaluated in terms of both AUC and calibration.

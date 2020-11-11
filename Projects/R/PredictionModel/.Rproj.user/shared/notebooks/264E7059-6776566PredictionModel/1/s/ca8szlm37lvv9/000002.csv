@@ -1,0 +1,8 @@
+"0","#Now that we have the five best predictors, let's plot some graphs to observe the relations between Predictors and Price of the House"
+"0","#Best predictors are: sqft_living, waterfront, grade, yr_built, lat"
+"0",""
+"0","TypeSize <- ggplot(wine_dataset, aes(x = sqft_living, y = Price)) + geom_point(aes(colour = waterfront)) +"
+"0","labs(x = ""Size of the House"", y = ""Price"")"
+"2","Error in ggplot(wine_dataset, aes(x = sqft_living, y = Price)) : 
+  object 'wine_dataset' not found
+"

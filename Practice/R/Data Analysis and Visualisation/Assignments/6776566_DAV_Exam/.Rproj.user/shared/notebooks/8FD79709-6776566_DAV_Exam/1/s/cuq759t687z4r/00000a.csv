@@ -1,0 +1,10 @@
+"0","#6. What are the accuracy, recall, and precision of your model? [1 points]"
+"0",""
+"0","cmat_lr <- table(true = test_set$CCD, pred = pred_lr)"
+"0",""
+"0","TN <- cmat_lr[1, 1]"
+"0","FN <- cmat_lr[2, 1]"
+"0",""
+"0","TP <- cmat_lr[2, 2]"
+"2","Error in `[.default`(cmat_lr, 2, 2) : subscript out of bounds
+"

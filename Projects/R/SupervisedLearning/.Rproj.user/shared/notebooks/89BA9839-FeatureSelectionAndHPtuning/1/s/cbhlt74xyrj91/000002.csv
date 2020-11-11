@@ -1,0 +1,6 @@
+"0","#The graph looks a bit better. Now to improve more, we need to select the best penalty or lamba value."
+"0",""
+"0","result_nopenalty <- glmnet(x = x_train[, -1],"
+"0","                           y = train_set$Salary,"
+"0","                           family = ""gaussian"")"
+"0","plot(result_nopenalty)"

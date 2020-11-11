@@ -1,0 +1,132 @@
+---
+title: "6776566_assignment_EDA"
+params:
+  answers: true
+mainfont: Arial
+fontsize: 12pt
+urlcolor: blue
+output: 
+  html_document:
+    toc: true
+    toc_depth: 1
+    toc_float: true
+    theme: paper
+---
+
+Dataset details:
+The dataset is downloaded from Kaggel. It is Star Classifier, i.e., it is a compliation of various properties of stars in the universe. It has columns that show following details of a star: Temperature,Luminosity,Radius,Absolute magnitude,Star type,Star color and Spectral Class.
+
+Operations Performed:
+In this assignment, I have tried to explore this data set and have tried to find various relations between properties, for example: whether star of some "type" are brighter(have more luminosity) than stars of other "type". I also tried to find out the biggest star and the brightest star according to the dataset.
+By performing these operations on the dataset, I learned about using various R functionalities and also a lot about properties of a star. One of the most interesting fact that I came to know from this is that even though the size of star is related to its brightness, that doesnot mean that the brightest star will be hottest.
+
+
+```{r}
+library(tidyverse)
+```
+
+
+#importing dataset
+```{r}
+star_dataset <- read.csv("~/Programming/R/Data Analysis and Visualisation/Assignments/6776566Exploratory_Data_Analysis/data/star_dataset.csv")
+```
+
+#getting a glimpse of the dataset
+```{r}
+head(star_dataset)
+```
+
+#getting summary of the dataset
+```{r}
+summary(star_dataset)
+```
+#we do not want to use scientific notations in R
+```{r}
+options(scipen=999)
+```
+
+ 
+#applying filter function to the dataset. This gives us all the stars of colour Blue.
+```{r}
+star_dataset %>% filter(Star.color == "Blue" & Radius.R.Ro. > 100)
+```
+
+#applying arrange function to the dataset. This gives us a Blue star with lowest temprature.
+```{r}
+star_dataset %>% filter(Star.color == "Blue" & Radius.R.Ro. > 100) %>% arrange(Temperature..K.)
+```
+
+#applying select function to the dataset
+```{r}
+star_dataset %>% filter(Star.color == "Blue" & Radius.R.Ro. > 100) %>% arrange(Temperature..K.) %>%
+select(Luminosity.L.Lo., Spectral.Class)
+```
+
+#Finding the biggest star
+```{r}
+max(star_dataset$Radius.R.Ro.) 
+star_dataset %>% filter(Radius.R.Ro. == 1948.5) %>% select(Temperature..K., Luminosity.L.Lo., Radius.R.Ro., Absolute.magnitude.Mv., Star.type, Star.color, Spectral.Class)
+```
+
+#Finding the brightest star
+```{r}
+max(star_dataset$Luminosity.L.Lo.) 
+star_dataset %>% filter(Luminosity.L.Lo. == 849420) %>% select(Temperature..K., Luminosity.L.Lo., Radius.R.Ro., Absolute.magnitude.Mv., Star.type, Star.color, Spectral.Class)
+```
+
+
+#Creating plots
+
+#This plot shows that stars of type 4 and 5 are brighter than others.
+```{r}
+plot(x = star_dataset$Star.type, y = star_dataset$Luminosity.L.Lo., xlab = "Type", ylab = "Brightness")
+```
+
+
+#This plot shows the same results but here I have used geom_pont and geom_density.
+```{r}
+TypeBright <- ggplot(star_dataset, aes(x = Star.type, y = Luminosity.L.Lo.)) + geom_point() +
+labs(x = "Type", y = "Brightness", title = "Plot showing how the Type of a star affects its luminosity") + geom_density_2d() + theme_minimal()
+```
+
+
+#This plot shows that the type 5 stars are biggest in size. It also indicates the Spectral Class of stars.
+```{r}
+TypeSize <- ggplot(star_dataset, aes(x = Star.type, y = Radius.R.Ro.)) + geom_point(aes(colour = Spectral.Class)) +
+labs(x = "Type", y = "Size")
+TypeSize
+```
+
+#This plot shows that stars of spectral class B and O are bigger than others. It also indicates star types.
+```{r}
+ClassBright <- ggplot(star_dataset, aes(x = Spectral.Class, y = Luminosity.L.Lo.)) + 
+  geom_point(aes(colour = Star.type)) +
+  labs(x = "Spectral Class", y = "Brightness")
+ClassBright
+
+```
+
+#This plot shows that stars of class B and O are bigger than others. This also hence proves that the brightness of a star is affected by its size as shows in plots 1, 2, 3.
+```{r}
+ClassSize <- ggplot(star_dataset, aes(x = Spectral.Class, y = Radius.R.Ro.)) + geom_point() +
+labs(x = "Class", y = "Size") + geom_text(aes(label = Star.type, colour = Star.type), check_overlap = TRUE, size = 4, hjust = 1.5, yjust = 1.5)
+
+ClassSize
+```
+
+
+#These two plot shows that there is no real relation between brightness and temprature of a star. If a star is the brightest then that does not mean that it's the hottest.
+```{r}
+TempBright <- ggplot(star_dataset, aes(x = Temperature..K., y = Luminosity.L.Lo.)) + geom_point() + geom_smooth(method = "lm") + labs(x = "Temprature", y = "Brightness", title = "Plot showing relation between temprature and brightness of a star.") + geom_density_2d() + theme_minimal()
+
+TempBright
+```
+
+
+```{r}
+star_dataset %>%
+  ggplot(aes(x = Temperature..K., y = Luminosity.L.Lo.)) + geom_point(aes(colour = Star.type)) + 
+  labs(x = "Temprature", y = "Brightness", title = "Plot showing relation between temprature and brightness of a star.")
+
+```
+

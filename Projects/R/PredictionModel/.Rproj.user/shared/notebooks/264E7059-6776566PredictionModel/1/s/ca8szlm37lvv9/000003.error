@@ -1,0 +1,1 @@
+{"frames":[{"character_number":0,"end_character_number":0,"end_line_number":0,"file":"","func":"ggplot(wine_dataset, aes(x = sqft_living, y = Price))","line_number":0}],"message":"Error in ggplot(wine_dataset, aes(x = sqft_living, y = Price)) : \n  object 'wine_dataset' not found\n"}

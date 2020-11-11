@@ -1,0 +1,149 @@
+---
+title: "6776566_DAV_Exam"
+params:
+  answers: false
+mainfont: Arial
+fontsize: 12pt
+urlcolor: blue
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 1
+    latex_engine: xelatex
+  html_document:
+    toc: true
+    toc_depth: 1
+    toc_float: true
+    df_print: paged
+    theme: paper
+---
+
+ Q1(a): Name its aesthetics, geoms, scales, and facets. That is, name the variables to which various aesthetics etc. are mapped. Also name any statistical transformations or special coordinate systems. [1 point]
+ Answer: Figure 1:
+ aesthetics - x-> percentage of each gender, y -> age, colour is filled according to the gender
+ geoms - geom bar is used where the coord_flip() is used to make it horizontal
+ scales - nominal scale for gender variable, continuous scale for age and ratio scale for percentage of population
+ facets - Single facet is used.
+ Special coordinate system - x-axis has zero as mid point. No negative axis.
+ 
+ Figure 2:
+ aesthetics - title is used, x -> year, y-> number of murders, single geom point is highlighted, area is filled with red colour
+ geoms - geom point, geom line, geom area
+ scales - continuous scale for year and ratio scale for number of murders
+ facets - Single facet is used.
+ Special coordinate system - y-axis increases while we navigate down.
+ 
+Q1(b): Give at least three suggestions for improvement of the visualization, and explain your rationale. [1 point]
+  Answer: Following improvements can be made in Figure 1:
+    1. Assign labels to y and x-axis. This will make the graph easily readable.
+    2. Add a title for the graph
+    3. In x-axis, point 0 is in the middle. We can use vetical bars to avoid the confusion.
+    Following improvements can be made in Figure 2:
+    1. Assign labels to y and x-axis. This will make the graph easily readable.
+    2. Remove the line "Number of murders committed using firearms". We can use this as a label for y-axis.
+    3. y-axis increases while we navigate down. We can use the usual system wherein y increases when navigating upwards.
+    
+Q2. Suppose you are given a supervised regression task. There are many possible models that could accomplish such a task. Which one is the best? [1 point]
+  Answer: There are many ways to design a regression model. We can have a linear model, polynomial model, etc. We need to find a model which will give us the best bias-variance trade-odd. All the models have predictors. Our first priority will be looking for a simple model which will ensure low variance. Thus, while calculating the R-squared value, it is not necessary that we go with the highest R-squared value. We can then look for Mean Squared Error of each model. The lower the MSE, the better the model.
+  
+Q3. Suppose you are given an unsupervised task. There are many possible models that could accomplish such a task. Which one is the best? [1 point]
+  Answer: The answer depends upon the dataset. FOr an imbalanced dataset, we can plot the precision-recall graph and choose the model with best results. For balanced set of data, e can always calculate the accuracy and plot the ROC curve of the model. We can then select the model with largest AUC and best accuracy.
+  
+Q4. For each of the following supervised learning situations, indicate which of the following feature selection/regularization techniques are most likely to be useful. Explain your rationale. [3 points]
+Several answers may apply. You may not need to mention all four techniques a-d. Techniques:
+a. variance filter;
+b. correlation filter;
+c. random forest-based wrapper; 
+d. L2 penalization.
+Situations:
+1. A raw, uncleaned dataset with many noisy features, many of which are mostly zero;
+2. A dataset in which many features are almost the same (e.g. age and birth year);
+3. The client wants you to run a linear regression and is interested in unbiased estimates of the coefficients.
+
+  Answer: Situation 1 - We can use the correlation filter and variance filter. This is because, we have raw data with us. Thus, these filters will help find the variables which has most effect on outcome of our prediction. Also, filter methods are faster and not computationally expensive when compared to the wrapper methods.
+  Situation 2 - We can use the random forest-based wrapper here. This is because, we already have a set of predictors which are closely related. We now need to find the best predictors to help us with our prediction. We can use the L2 penalization technique to prevent the model from overfitting the data.
+  Situation 3 - We can use a simple correlation filter to estimate the coefficients(slope and intercept). This is because, the model is a linear model which mean there is a correlation between observed values and predicted values. With this filter technique we can easily find the best relationship among the values and hence can find the best coefficients.
+  
+Q5.See the below PCA biplot of Chicago neighborhoods. (The center contains some illegible variable names; you can ignore these.) [3 points]
+• Q5a. How much of the total variation in the neighborhood characteristics do the first two principal components explain?
+• Q5b. Is income positively or negatively associated with crime? How can you tell from the biplot?
+• Q5c. Which explains more crime variance: median income or median housing value? How can you tell?
+
+  Answer: 5a - The first two principal components explain 99.34% of the total variation in the neighborhood characteristics.
+  5b - The income is negatively related to the crime rate. As we can see in the graph, the crime rate increases while navigating towards right and the income is increasing the relatively opposite direction. Thus, we can say that crime rate decreases with higher income.
+  5c - Median income explains more crime variance than median housing. Both median income and median housing are negatively related to PC1. When you consider the points surrounding median income, you can notice that there is a lot of variation in the colour of points which means the crime rate really fluctuates as we propagate along the arrow(of median income). However, as we propagate along the arrow of median housing, the colou variation decreases which signifies the decrease in crime rate.
+  
+PRACTICAL QUESTION
+
+```{r}
+library(ISLR)
+library(tidyverse)
+library(dplyr)
+library(pROC)
+
+library(rpart)
+library(rpart.plot)
+library(randomForest)
+
+set.seed(45)
+```
+
+```{r}
+#Load the dataset bees.csv and split it into a training (80%) and test set (20%). Use the training set for EDA and model development. [1 point]
+
+bees <- read.csv("~/Programming/R/Data Analysis and Visualisation/Assignments/6776566_DAV_Exam/bees.csv")
+
+
+splits <- c(rep("train", 3806), rep("test", 952))
+bees = bees %>% mutate(splits = sample(splits))
+
+training_set <- bees%>%filter(splits == "train")
+test_set <- bees%>%filter(splits == "test")
+```
+
+```{r}
+#Which country suffered the highest winter mortality this year? [1 point]
+unique(bees %>% filter(Winter_mortality == max(Winter_mortality)) %>% dplyr::select(Country))
+```
+
+```{r}
+#Which country experienced the highest rate of CCD? (HINT: use Winter_mortality to work out if CCD occured) [1 point]
+#function to generate a linear model and calculate MSE
+ccd_bees <- 
+  bees %>% 
+  mutate(CCD = ifelse(Winter_mortality == "100", 1, 0))
+
+ccd_bees <- ccd_bees %>% mutate(
+as.factor(1:4758)
+  
+)
+
+training_set <- ccd_bees%>%filter(splits == "train")
+test_set <- ccd_bees%>%filter(splits == "test")
+
+unique(training_set %>%
+         filter(Winter_mortality == max(Winter_mortality)) %>% 
+         dplyr::select(Country))
+```
+
+
+```{r}
+#Use logistic regression to predict CCD from the other features in the dataset. (HINT: add the previously calculated feature to the dataset) [2 points]
+
+log_reg <- glm(CCD ~ ., "binomial", ccd_bees)
+```
+```{r}
+#5. Show the confusion matrix of predictions from your model, for the test data. [2 points]
+prob_lr <- predict(log_reg, type = "CCD")
+pred_lr <- ifelse(prob_lr > .5, 1, 0)
+
+table(true = test_set$CCD, pred = pred_lr)
+```
+
+
+```{r}
+#6. What are the accuracy, recall, and precision of your model? [1 points]
+7. COMPLETELY OPTIONAL HYPERBONUS: compare the test performance of the following models: L2- penalized logistic regression, random forest, and gradient boosting. Performance should be evaluated in terms of both AUC and calibration.
+```
+
+

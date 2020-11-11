@@ -1,0 +1,5 @@
+"0","ClassBright <- ggplot(star_dataset, aes(x = Spectral.Class, y = Luminosity.L.Lo.)) + "
+"0","  geom_point(aes(colour = Star.type)) +"
+"0","  labs(x = ""Spectral Class"", y = ""Brightness"")"
+"0","ClassBright"
+"0",""
